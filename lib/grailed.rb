@@ -2,7 +2,7 @@ require 'sqlite3'
 require 'singleton'
 require 'pry'
 
-# step 1: connect to sqlite db
+# connects to sqlite db
 class GrailedDBConnection < SQLite3::Database
   include Singleton
 
@@ -15,23 +15,23 @@ class GrailedDBConnection < SQLite3::Database
   end
 end
 
-# step 2: find and print disallowed usernames
+# finds disallowed usernames
 def find_disallowed_usernames
   sql = "SELECT * FROM users WHERE username IN
-   (SELECT invalid_username FROM disallowed_usernames)"
+          (SELECT invalid_username FROM disallowed_usernames)"
   GrailedDBConnection.instance.execute(sql)
 end
 
-# step 3: find and print double usernames
+# finds double usernames
 def find_duplicate_usernames
   sql = "SELECT * FROM users
-  WHERE username IN
-    (SELECT username FROM users GROUP BY username HAVING COUNT(*) > 1)  AND username NOT IN
-    (SELECT invalid_username FROM disallowed_usernames)"
+          WHERE username IN
+            (SELECT username FROM users GROUP BY username HAVING COUNT(*) > 1)  AND username NOT IN
+            (SELECT invalid_username FROM disallowed_usernames)"
   GrailedDBConnection.instance.execute(sql)
 end
 
-# step 4: make a hashmap of users with disallowed usernames
+# makes a hashmap of users with disallowed usernames
 def disallowed_usernames_hashmap
   users = find_disallowed_usernames()
   hashmap = {}
@@ -41,7 +41,7 @@ def disallowed_usernames_hashmap
   hashmap
 end
 
-# step 5: make a hashmap of users with duplicate usernames
+# makes a hashmap of users with duplicate usernames
 def duplicate_usernames_hashmap
   users = find_duplicate_usernames()
   hashmap = {}
@@ -51,7 +51,7 @@ def duplicate_usernames_hashmap
   hashmap
 end
 
-# step 6: change disallowed usernames
+# changes disallowed usernames
 def change_disallowed_usernames
   usernames_hash = disallowed_usernames_hashmap()
   sql = "BEGIN TRANSACTION;"
@@ -66,19 +66,19 @@ def change_disallowed_usernames
 end
 
 
-# step 7: change duplicate usernames
+# changes duplicate usernames
 def change_duplicate_usernames
   usernames_hash = duplicate_usernames_hashmap()
-  sql = "BEGIN TRANSACTION;"
+  # sql = "BEGIN TRANSACTION;"
   usernames_hash.each do |username, ids|
     ids.each_with_index do |id, index|
       if index > 0
         new_username = "#{username}#{index}"
-        sql << "UPDATE users SET username = '#{new_username}' WHERE id = #{id};"
+        sql = "UPDATE users SET username = '#{new_username}' WHERE id = #{id};"
+        GrailedDBConnection.instance.execute(sql)
       end
     end
   end
-  sql << "END;"
-  puts sql
+  # sql << "END;"
   # GrailedDBConnection.instance.execute(sql)
 end
