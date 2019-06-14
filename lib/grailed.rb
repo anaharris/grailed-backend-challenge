@@ -31,7 +31,7 @@ def find_duplicate_usernames
   GrailedDBConnection.instance.execute(sql)
 end
 
-# makes a hashmap of usernames to their ids
+# makes hashmap of usernames to their ids
 def create_hashmap(users)
   hashmap = {}
   users.each do |user|
