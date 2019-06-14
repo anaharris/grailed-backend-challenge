@@ -1,16 +1,25 @@
+#!/usr/bin/env ruby
 require_relative './lib/grailed'
 
-# runs all other functions
-def main
-  puts 'disallowed usernames:'
-  puts find_disallowed_usernames()
-  puts '**********************************'
-  puts 'duplicate usernames:'
-  puts find_duplicate_usernames()
+case ARGV.first
+when 'disallowed'
+  if ARGV[1] == '--dry-run'
+    puts 'users with disallowed usernames:'
+    puts find_disallowed_usernames
+  else
+    puts 'resolving disallowed usernames...'
+    change_disallowed_usernames
+    puts 'done!'
+  end
+when 'duplicates'
+  if ARGV[1] == '--dry-run'
+    puts 'users with duplicate usernames:'
+    puts find_duplicate_usernames
+  else
+    puts 'resolving duplicate usernames...'
+    change_duplicate_usernames
+    puts 'done!'
+  end
+else
+  puts 'unknown command'
 end
-
-main()
-# puts disallowed_usernames_hashmap()
-# puts duplicate_usernames_hashmap()
-# change_disallowed_usernames()
-# change_duplicate_usernames()
