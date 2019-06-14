@@ -21,11 +21,11 @@ Use bundler and run `$ bundle install`.
 
 ## Usage
 
-There are two main commands in the cli and they're called `disallowed`
+There are two main commands in the CLI and they're called `disallowed`
 and `duplicates`. Each of these arguments takes a `--dry-run` option that will
 print the affected rows.
 
-Examples
+Examples:
 
 ```
 $ ./cli.rb disallowed --dry-run
