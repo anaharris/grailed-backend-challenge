@@ -7,10 +7,12 @@ transforms them into valid usernames.
 
 For this CLI I chose Ruby. I feel comfortable working in Ruby, and I have made
 simple CLIs in Ruby before.
+
 You will notice that this app uses one singleton class. I've decided for this
 approach because I wanted to make sure that the database connection is established
 only once. The rest of the code is written in functions, as the given task is
 not complex enough to use classes.
+
 This CLI uses tests.
 
 ## Installation
